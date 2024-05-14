@@ -30,7 +30,16 @@ function createTaskCard(task) {
       const card = document.createElement('div');
       card.id = addCard.id;
       card.className = 'card task-card text-white bg-danger m-3';
-      todoCards.appendChild(card);
+      if (addCard.parentId = 'todo-cards') {
+        todoCards.appendChild(card);
+        console.log(`todo-cards ${addCard.id}: parentId = ${addCard.parentId}`); 
+      } else if (addCard.parentId = 'in-progress-cards') {
+        inProgressCards.appendChild(card);
+        console.log(`in-progress-cards ${addCard.id}: parentId = ${addCard.parentId}`);
+      } else if (addCard.parentId = 'done-cards') {
+        doneCards.appendChild(card);
+        console.log(`done-cards ${addCard.id}: parentId = ${addCard.parentId}`);
+      }
 
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body';
@@ -114,14 +123,10 @@ $(document).ready(function () {
     $( "#todo-cards, #in-progress-cards, #done-cards" ).sortable({
       connectWith: ".ui-sortable",
       update: function(event, ui) {
-        // Get the updated positions of items after sorting
-        let positions = {};
-        $('.column').each(function() {
-          let columnId = $(this).attr('id');
-          positions[columnId] = $(this).find('.ui-sortable').sortable('toArray');
-        });
+  
         console.log($(this).attr('id'));
-        console.log(positions);
+        console.log(ui);
+        console.log(ui);
       }
     }).disableSelection();
   });
