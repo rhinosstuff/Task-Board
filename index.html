@@ -27,31 +27,31 @@
 
     <!-- Todo: Create a modal with a form to add tasks -->
     <div class="modal fade" id="form-modal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form class="d-flex flex-column p-3">
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="col-12 p-1" for="task-name">Task Title</label>
-                            <input class="col-12 p-1" id="task-name" type="text" name="task-name" required> 
-                        </div>
-                        <div class="col-6">
-                            <label class="col-12 p-1" for="task-due-date">Task Due Date</label>
-                            <input class="col-12 p-1" id="task-due-date" type="text" name="task-due-date" required>
-                        </div>
-                    </div>
-                    <label class="p-1" for="task-description">Task Description</label>
-                    <textarea class="p-1" id="task-description" type="text" name="task-description" required></textarea>
-                </form>
-                <div class="d-flex justify-content-center p-4">
-                    <button type="button" class="task-submit btn btn-success">Add Task</button>
-                </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form class="d-flex flex-column p-3">
+            <div class="row mb-3">
+              <div class="col-6">
+                <label class="col-12 p-1" for="task-name">Task Title</label>
+                <input class="col-12 p-1" id="task-name" type="text" name="task-name" required> 
+              </div>
+              <div class="col-6">
+                <label class="col-12 p-1" for="task-due-date">Task Due Date</label>
+                <input class="col-12 p-1" id="task-due-date" type="text" name="task-due-date" required>
+              </div>
             </div>
+            <label class="p-1" for="task-description">Task Description</label>
+            <textarea class="p-1" id="task-description" type="text" name="task-description" required></textarea>
+          </form>
+          <div class="d-flex justify-content-center p-4">
+            <button type="button" class="btn btn-success" id="task-submit" data-bs-dismiss="modal">Add Task</button>
+          </div>
         </div>
+      </div>
     </div>
 
     <div class="row swim-lanes text-center justify-content-between">
@@ -61,7 +61,7 @@
             <h2 class="card-title mb-1">To Do</h2>
           </div>
           <div class="card-body bg-light">
-            <div id="todo-cards"></div>
+            <div id="todo-cards" class="column h-100"></div>
           </div>
         </div>
       </div>
@@ -71,7 +71,7 @@
             <h2 class="card-title mb-1">In Progress</h2>
           </div>
           <div class="card-body bg-light">
-            <div id="in-progress-cards"></div>
+            <div id="in-progress-cards" class="column h-100"></div>
           </div>
         </div>
         </div>
@@ -81,8 +81,8 @@
               <h2 class="card-title mb-1">Done</h2>
             </div>
             <div class="card-body bg-light">
-              <div id="done-cards"></div>
-          </div>
+              <div id="done-cards" class="column h-100"></div>
+            </div>
           </div>
       </div>
     </div>
@@ -100,21 +100,3 @@
 </body>
 
 </html>
-
-<!-- <form class="d-flex flex-column border col-lg-6 col-md-8 p-3">
-    <h4>Add Task</h4>
-    <div class="row border mb-3">
-        <div class="col-6 border">
-            <label class="col-12 p-1" for="task-name">Task Title</label>
-            <input class="col-12" type="text" placeholder="Task Name" name="task-name" required> 
-        </div>
-        <div class="col-6 border">
-            <label class="col-12 p-1" for="task-due-date">Task Due Date</label>
-            <input class="col-12 type="text" placeholder="Select a Date" name="task-due-date" required>
-        </div>
-    </div>
-    <label class="p-1" for="task-description">Task Description</label>
-    <textarea type="text" placeholder="Type a Brief Description" name="task-description" required></textarea>
-    
-    <button type="button" class="">Add Task</button>
-</form> -->
