@@ -16,7 +16,6 @@ let nextId = JSON.parse(localStorage.getItem("nextId"));
 function generateTaskId() {
   nextId ++;
   localStorage.setItem('nextId', nextId);
-  console.log(nextId)
 }
 
 // Todo: create a function to create a task card
@@ -28,7 +27,7 @@ function createTaskCard(task) {
   
       const taskCard = document.createElement('div');
       taskCard.id = addCard.id;
-      taskCard.className = 'card task-card';
+      taskCard.className = 'card task-card m-3';
       todoCards.appendChild(taskCard);
 
       const taskBody = document.createElement('div');
@@ -56,17 +55,14 @@ function createTaskCard(task) {
       cardButton.textContent = 'Delete'
       taskBody.appendChild(cardButton);
 
+      // compares todays date with task duedate to update color of card
       const today = dayjs().format('MM/DD/YYYY');
       const dueDate = cardDate.textContent
-      console.log(today)
-      console.log(dueDate)
       
       if (today === dueDate) {
-        console.log(today === dueDate)
-        taskCard.className = 'card task-card bg-warning text-white';
+        taskCard.className = 'card task-card m-3 bg-warning text-white';
       } else if (today > dueDate) {
-        console.log(today === cardDate)
-        taskCard.className = 'card task-card bg-danger text-white';
+        taskCard.className = 'card task-card m-3 bg-danger text-white';
       }
 
     }
@@ -80,6 +76,8 @@ function renderTaskList() {
 
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
+  event.preventDefault()
+  
   generateTaskId();
   let addNewCard = [];
   const newTask = {
@@ -96,7 +94,6 @@ function handleAddTask(event){
     task = taskList;
   }
   
-  console.log(newTask);
   task.push(newTask);
   localStorage.setItem('tasks', JSON.stringify(task));
   createTaskCard(addNewCard);
@@ -108,26 +105,29 @@ function handleAddTask(event){
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
-  
+  // gets the '.delete-button' parent parent we want to remove
   let currentTask = $(event.target).parent().parent();
-  
+  // gets the 'id' from 'currentTask', converts it to a number to use as a key: into 'taskList'
   const taskId = Number(currentTask.attr('id'));
 
   let newList = [];
+  // checks to make sure there is data in the 'taskList'
+  // then filters out the object by the key: 'id', stores results in 'newList'
+  // then removes 'tasks' from localStorage
   if (taskList !== null) {
-    newList = taskList;
+    newList = taskList.filter(item => item.id !== taskId)
+    localStorage.removeItem('tasks')
   }
   
-  
-  console.log(newList);
-  // localStorage.removeItem('tasks');
-  localStorage.setItem('tasks', JSON.stringify(newList.filter(item => item.id !== taskId)));
+  // sets 'newList' in 'tasks' in localStorage
+  localStorage.setItem('tasks', JSON.stringify(newList));
+  // removes currentTask from html
   currentTask.remove();
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-
+  event.preventDefault()
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
@@ -136,7 +136,7 @@ $(document).ready(function () {
   
   taskSubmit.on('click', handleAddTask)
   
-  // Listens in swim-lanes for clik on 
+  // Listens in swim-lanes for clik on delete-button
   swimLanes.on('click', '.delete-button', handleDeleteTask);
 
   // Allows user to move cards inbetween swim-lanes
@@ -144,7 +144,7 @@ $(document).ready(function () {
     $( "#todo-cards, #in-progress-cards, #done-cards" ).sortable({
       connectWith: ".ui-sortable",
       update: function(event, ui) {
-
+        handleDrop(event, ui)
       }
     }).disableSelection();
   });

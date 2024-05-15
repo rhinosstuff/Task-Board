@@ -7,9 +7,9 @@ body {
   min-height: 60vh;
 }
 
-.task-card {
-  margin: 0 auto;
-}
+/* .task-card {
+  margin: 15px;
+} */
 
 .task-card:hover {
   cursor: grab;
