@@ -1,11 +1,11 @@
-const taskName = document.querySelector('#task-name');
+const taskTitle = document.querySelector('#task-title');
 const taskDueDate = document.querySelector('#task-due-date');
 const taskDescription = document.querySelector('#task-description');
 const taskSubmit = $('#task-submit');
 const todoCards = document.querySelector('#todo-cards');
 const inProgressCards = document.querySelector('#in-progress-cards');
 const doneCards = document.querySelector('#done-cards');
-const lanes = $('.swim-lanes');
+const swimLanes = $('.swim-lanes');
 
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
@@ -21,50 +21,53 @@ function generateTaskId() {
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
-  console.log(`This is a test: ${task}`)
-  console.log(task)
+  // console.log(task)
   if (task !== null) {
     for (let i = 0; i < task.length; i++) {
       const addCard = task[i];
   
-      const card = document.createElement('div');
-      card.id = addCard.id;
-      card.className = 'card task-card text-white bg-danger m-3';
-      if (addCard.parentId = 'todo-cards') {
-        todoCards.appendChild(card);
-        console.log(`todo-cards ${addCard.id}: parentId = ${addCard.parentId}`); 
-      } else if (addCard.parentId = 'in-progress-cards') {
-        inProgressCards.appendChild(card);
-        console.log(`in-progress-cards ${addCard.id}: parentId = ${addCard.parentId}`);
-      } else if (addCard.parentId = 'done-cards') {
-        doneCards.appendChild(card);
-        console.log(`done-cards ${addCard.id}: parentId = ${addCard.parentId}`);
-      }
+      const taskCard = document.createElement('div');
+      taskCard.id = addCard.id;
+      taskCard.className = 'card task-card';
+      todoCards.appendChild(taskCard);
 
-      const cardBody = document.createElement('div');
-      cardBody.className = 'card-body';
-      card.appendChild(cardBody);
+      const taskBody = document.createElement('div');
+      taskBody.className = 'card-body';
+      taskCard.appendChild(taskBody);
 
       const cardTitle = document.createElement('h5');
-      cardTitle.className = 'card-title border-bottom';
-      cardTitle.textContent = addCard.taskName;
-      cardBody.appendChild(cardTitle);
+      cardTitle.className = 'card-title border-bottom border-2';
+      cardTitle.textContent = addCard.taskTitle;
+      taskBody.appendChild(cardTitle);
 
       const cardText = document.createElement('p');
       cardText.className = 'card-text';
       cardText.textContent = addCard.taskDescription;
-      cardBody.appendChild(cardText);
+      taskBody.appendChild(cardText);
 
       const cardDate = document.createElement('div');
       cardDate.className = 'card-date';
       cardDate.textContent = addCard.taskDueDate;
-      cardBody.appendChild(cardDate);
+      taskBody.appendChild(cardDate);
 
       const cardButton = document.createElement('button');
       cardButton.type = 'button';
       cardButton.className = 'btn btn-danger border delete-button';
       cardButton.textContent = 'Delete'
-      cardBody.appendChild(cardButton);
+      taskBody.appendChild(cardButton);
+
+      const today = dayjs().format('MM/DD/YYYY');
+      const dueDate = cardDate.textContent
+      console.log(today)
+      console.log(dueDate)
+      
+      if (today === dueDate) {
+        console.log(today === dueDate)
+        taskCard.className = 'card task-card bg-warning text-white';
+      } else if (today > dueDate) {
+        console.log(today === cardDate)
+        taskCard.className = 'card task-card bg-danger text-white';
+      }
 
     }
   }
@@ -82,7 +85,7 @@ function handleAddTask(event){
   const newTask = {
     parentId: 'todo-cards',
     id: nextId,
-    taskName: taskName.value.trim(),
+    taskTitle: taskTitle.value.trim(),
     taskDescription: taskDescription.value.trim(),
     taskDueDate: taskDueDate.value 
   }
@@ -97,11 +100,29 @@ function handleAddTask(event){
   task.push(newTask);
   localStorage.setItem('tasks', JSON.stringify(task));
   createTaskCard(addNewCard);
+
+  taskTitle.value = '';
+  taskDescription.value = '';
+  taskDueDate.value = '';
 }
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
-  $(event.target).parent().parent().remove();
+  
+  let currentTask = $(event.target).parent().parent();
+  
+  const taskId = Number(currentTask.attr('id'));
+
+  let newList = [];
+  if (taskList !== null) {
+    newList = taskList;
+  }
+  
+  
+  console.log(newList);
+  // localStorage.removeItem('tasks');
+  localStorage.setItem('tasks', JSON.stringify(newList.filter(item => item.id !== taskId)));
+  currentTask.remove();
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
@@ -116,17 +137,14 @@ $(document).ready(function () {
   taskSubmit.on('click', handleAddTask)
   
   // Listens in swim-lanes for clik on 
-  lanes.on('click', '.delete-button', handleDeleteTask);
+  swimLanes.on('click', '.delete-button', handleDeleteTask);
 
   // Allows user to move cards inbetween swim-lanes
   $( function() {
     $( "#todo-cards, #in-progress-cards, #done-cards" ).sortable({
       connectWith: ".ui-sortable",
       update: function(event, ui) {
-  
-        console.log($(this).attr('id'));
-        console.log(ui);
-        console.log(ui);
+
       }
     }).disableSelection();
   });
@@ -139,7 +157,3 @@ $(document).ready(function () {
     });
   });
 });
-
-
-
-
