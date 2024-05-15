@@ -36,8 +36,8 @@
           <form class="d-flex flex-column p-3">
             <div class="row mb-3">
               <div class="col-6">
-                <label class="col-12 p-1" for="task-name">Task Title</label>
-                <input class="col-12 p-1" id="task-name" type="text" name="task-name" required> 
+                <label class="col-12 p-1" for="task-title">Task Title</label>
+                <input class="col-12 p-1" id="task-title" type="text" name="task-title" required> 
               </div>
               <div class="col-6">
                 <label class="col-12 p-1" for="task-due-date">Task Due Date</label>
@@ -61,7 +61,7 @@
             <h2 class="card-title mb-1">To Do</h2>
           </div>
           <div class="card-body bg-light">
-            <div id="todo-cards" class="column h-100"></div>
+            <div id="todo-cards" class="sortable h-100"></div>
           </div>
         </div>
       </div>
@@ -71,7 +71,7 @@
             <h2 class="card-title mb-1">In Progress</h2>
           </div>
           <div class="card-body bg-light">
-            <div id="in-progress-cards" class="column h-100"></div>
+            <div id="in-progress-cards" class="sortable h-100"></div>
           </div>
         </div>
         </div>
@@ -81,7 +81,7 @@
               <h2 class="card-title mb-1">Done</h2>
             </div>
             <div class="card-body bg-light">
-              <div id="done-cards" class="column h-100"></div>
+              <div id="done-cards" class="sortable h-100"></div>
             </div>
           </div>
       </div>
