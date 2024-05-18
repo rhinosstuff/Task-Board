@@ -22,10 +22,11 @@
   </header>
   <div class="container">
     <div class="text-center mb-5">
+      <!-- this button opens the modal -->
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#form-modal">Add Task</button>
     </div>
 
-    <!-- Todo: Create a modal with a form to add tasks -->
+    <!-- This is a modal from bootstrap -->
     <div class="modal fade" id="form-modal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -48,12 +49,14 @@
             <textarea class="p-1" id="task-description" type="text" name="task-description" required></textarea>
           </form>
           <div class="d-flex justify-content-center p-4">
-            <button type="button" class="btn btn-success" id="task-submit" data-bs-dismiss="modal">Add Task</button>
+            <button type="button" class="btn btn-success" id="task-submit" data-bs-dismiss="modal">Submit</button>
           </div>
         </div>
       </div>
     </div>
+    <!-- this is the end of the modal code -->
 
+    <!-- these are the dragable columns -->
     <div class="row swim-lanes text-center justify-content-between">
       <div class="col-12 col-lg-4 d-flex">
         <div id="to-do" class="card border-light mb-3 lane flex-grow-1">

@@ -1,165 +1,186 @@
 const taskTitle = document.querySelector('#task-title');
 const taskDueDate = document.querySelector('#task-due-date');
 const taskDescription = document.querySelector('#task-description');
-const taskSubmit = $('#task-submit');
+const taskSubmit = document.querySelector('#task-submit');
 const todoCards = document.querySelector('#todo-cards');
 const inProgressCards = document.querySelector('#in-progress-cards');
 const doneCards = document.querySelector('#done-cards');
-const taskDelete = $('.swim-lanes');
+const taskDelete = document.querySelectorAll('.drop-columns');
 
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 
-// Todo: create a function to generate a unique task id
+// creates a unique id by taking nextId++ then setting in localStorage
 function generateTaskId() {
   nextId ++;
   localStorage.setItem('nextId', nextId);
 }
 
-// Todo: create a function to create a task card
+// check task if true then increment through task adding a task-card for each task object
 function createTaskCard(task) {
-  console.log('task', task)
+  
   if (task !== null) {
     for (let i = 0; i < task.length; i++) {
       const addCard = task[i];
   
       const taskCard = document.createElement('div');
       taskCard.id = addCard.id;
-      taskCard.className = 'card task-card m-3';
+      taskCard.className = 'task-card card bg-light mb-3" style="max-width: 18rem;';
+      
+      // check key: parentId to know which column to append task-card
+      // also changes color code if dragged to done-cards
       if (addCard.parentId === 'in-progress-cards') {
         inProgressCards.appendChild(taskCard);
       } else if (addCard.parentId === 'done-cards') {
+        taskCard.className = 'task-card card bg-light mb-3" style="max-width: 18rem;';
         doneCards.appendChild(taskCard);
       } else {
         todoCards.appendChild(taskCard);
       } 
       
+      const taskTitle = document.createElement('h5');
+      taskTitle.className = 'card-header';
+      taskTitle.textContent = addCard.taskTitle;
+      taskCard.appendChild(taskTitle);
+
       const taskBody = document.createElement('div');
       taskBody.className = 'card-body';
       taskCard.appendChild(taskBody);
 
-      const cardTitle = document.createElement('h5');
-      cardTitle.className = 'card-title border-bottom border-2';
-      cardTitle.textContent = addCard.taskTitle;
-      taskBody.appendChild(cardTitle);
+      const taskText = document.createElement('p');
+      taskText.className = 'card-text';
+      taskText.textContent = addCard.taskDescription;
+      taskBody.appendChild(taskText);
 
-      const cardText = document.createElement('p');
-      cardText.className = 'card-text';
-      cardText.textContent = addCard.taskDescription;
-      taskBody.appendChild(cardText);
+      const taskDate = document.createElement('div');
+      taskDate.className = 'card-text pb-2';
+      taskDate.textContent = addCard.taskDueDate;
+      taskBody.appendChild(taskDate);
 
-      const cardDate = document.createElement('div');
-      cardDate.className = 'card-date';
-      cardDate.textContent = addCard.taskDueDate;
-      taskBody.appendChild(cardDate);
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.className = 'btn btn-danger border delete-button';
+      deleteButton.textContent = 'Delete'
+      taskBody.appendChild(deleteButton);
 
-      const cardButton = document.createElement('button');
-      cardButton.type = 'button';
-      cardButton.className = 'btn btn-danger border delete-button';
-      cardButton.textContent = 'Delete'
-      taskBody.appendChild(cardButton);
-
-      // compares todays date with task duedate to update color of card
+      // compare todays date with task dueDate to change color code of task-card
+      // if 'today' is 'dueDate', change to yellow warning CSS
+      // if 'today' is past 'dueDate', change to red danger CSS 
       const today = dayjs().format('MM/DD/YYYY');
-      const dueDate = cardDate.textContent
+      const dueDate = taskDate.textContent
       
-      if (today === dueDate) {
-        taskCard.className = 'card task-card m-3 bg-warning text-white';
-      } else if (today > dueDate) {
-        taskCard.className = 'card task-card m-3 bg-danger text-white';
+      if (addCard.parentId != 'done-cards') {
+        if (today === dueDate) {
+          taskCard.className = 'task-card card text-white bg-warning mb-3" style="max-width: 18rem;';
+        } else if (today > dueDate) {
+          taskCard.className = 'task-card card text-white bg-danger mb-3" style="max-width: 18rem;';
+        }
       }
-
     }
   }
 }
 
-// Todo: create a function to render the task list and make cards draggable
+// used to render any previous localStorage tasks
 function renderTaskList() {
   if (taskList !== null) {
     createTaskCard(taskList);
   }
 }
 
-// Todo: create a function to handle adding a new task
+// gets user input to create new task object
 function handleAddTask(event){
   event.preventDefault()
   
-  generateTaskId();
+  generateTaskId(); // call to generate new unique id
   let addNewCard = [];
   const newTask = {
-    parentId: 'todo-cards',
+    parentId: 'todo-cards', // task-card initial-location
     id: nextId,
     taskTitle: taskTitle.value.trim(),
     taskDescription: taskDescription.value.trim(),
     taskDueDate: taskDueDate.value 
   }
-  addNewCard.push(newTask);
-  console.log('addNewCard', addNewCard)
   
+  // this makes sure we don't push to a null object
   let task = [];
   if (taskList !== null) {
-    console.log('taskList !-- null', taskList) 
     task = taskList;
   }
-  console.log('task should = tasks LS', task)
 
+  // stores 'newTask' in localStorage 
   task.push(newTask);
   localStorage.setItem('tasks', JSON.stringify(task));
-  console.log('LS tasks: ', JSON.parse(localStorage.getItem("tasks")))
+  
+  // resets the user-input fields
   taskTitle.value = '';
   taskDescription.value = '';
   taskDueDate.value = '';
   
+  // put 'newTask' in 'addNewCard' array so createTaskCard() can process it
+  addNewCard.push(newTask);
   createTaskCard(addNewCard);
+
+  // this refreshes the page so localStorage is always updated
   location.replace(location.href);
 }
 
-// Todo: create a function to handle deleting a task
+// deletes current task-card
 function handleDeleteTask(event){
   // gets the '.delete-button' parent parent we want to remove
-  let currentTask = $(event.target).parent().parent();
+  let currentTask = event.target.parentElement.parentElement;
   // gets the 'id' from 'currentTask', converts it to a number to use as a key: into 'taskList'
-  const taskId = Number(currentTask.attr('id'));
+  const taskId = Number(currentTask.getAttribute('id'));
 
-  let newList = [];
   // checks to make sure there is data in the 'taskList'
   // then filters out the object by the key: 'id', stores results in 'newList'
+  let newList = [];
   if (taskList !== null) {
     newList = taskList.filter(item => item.id !== taskId)
   }
   
-  // sets 'newList' in 'tasks' in localStorage
+  // sets 'newList' localStorage
   localStorage.setItem('tasks', JSON.stringify(newList));
-  // removes currentTask from html
+  
+  // removes/deletes 'currentTask' from html
   currentTask.remove();
+
+  // this refreshes the page so localStorage is always updated
   location.replace(location.href);
 }
 
-// Todo: create a function to handle dropping a task into a new status lane
+// keeps track of task-card location 'ui' is the current dragged element
 function handleDrop(event, ui) {
-  let currentTask = $(ui.item);
+  let currentTask = (ui.item);
   // gets the 'id' from 'currentTask', converts it to a number to use as a key: into 'taskList'
   const taskId = Number(currentTask.attr('id'));
-  let currentColumnId = ui.item.parent().attr('id');
-  
   // then filters out the object by the key: 'id', stores results in 'newList'
   let currentTaskIndex = taskList.findIndex(obj => obj.id == taskId)
-
+  // gets the 'id' from parent
+  let currentColumnId = ui.item.parent().attr('id');
+  
+  // updates the parentId property and stores it in localStorage
   taskList[currentTaskIndex].parentId = currentColumnId
   localStorage.setItem('tasks', JSON.stringify(taskList));
+  location.replace(location.href);
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
   renderTaskList();
   
-  taskSubmit.on('click', handleAddTask)
+  // this is the form submit button calls handleAddTask() 
+  taskSubmit.addEventListener('click', handleAddTask);
   
-  // Listens in swim-lanes for clik on delete-button
-  taskDelete.on('click', '.delete-button', handleDeleteTask);
-
+  // Listens in drop-columns for click, checks clicked element for class 'delete-button'
+  taskDelete.forEach(column => {
+    column.addEventListener('click', function(event) {
+      if (event.target.classList.contains('delete-button')) {
+        handleDeleteTask(event);
+      }
+    })
+  });
 
   // makes these columns sortable
   $( "#todo-cards, #in-progress-cards, #done-cards" ).sortable({
@@ -177,14 +198,3 @@ $(document).ready(function () {
     });
   });
 });
-
-
-  // Allows user to move cards inbetween swim-lanes
-  // $( function() {
-  //   $( "#todo-cards, #in-progress-cards, #done-cards" ).sortable({
-  //     connectWith: ".ui-sortable",
-  //     update: function(event, ui) {
-  //       handleDrop(event, ui)
-  //     }
-  //   }).disableSelection();
-  // });

@@ -7,15 +7,14 @@ body {
   min-height: 60vh;
 }
 
-/* .task-card {
+.task-card {
   margin: 15px;
-} */
+}
 
 .task-card:hover {
   cursor: grab;
 }
 
-.ui-sortable {
-    border: solid;
-    /* height: 100%; */
+button {
+  box-shadow: 0 2px 4px black;
 }
