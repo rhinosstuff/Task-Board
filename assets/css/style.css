@@ -14,3 +14,7 @@ body {
 .task-card:hover {
   cursor: grab;
 }
+
+button {
+  box-shadow: 0 2px 4px black;
+}

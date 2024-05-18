@@ -30,9 +30,11 @@ function createTaskCard(task) {
       taskCard.className = 'task-card card bg-light mb-3" style="max-width: 18rem;';
       
       // check key: parentId to know which column to append task-card
+      // also changes color code if dragged to done-cards
       if (addCard.parentId === 'in-progress-cards') {
         inProgressCards.appendChild(taskCard);
       } else if (addCard.parentId === 'done-cards') {
+        taskCard.className = 'task-card card bg-light mb-3" style="max-width: 18rem;';
         doneCards.appendChild(taskCard);
       } else {
         todoCards.appendChild(taskCard);
@@ -63,16 +65,18 @@ function createTaskCard(task) {
       deleteButton.textContent = 'Delete'
       taskBody.appendChild(deleteButton);
 
-      // compare todays date with task dueDate to change class CSS of task-card
+      // compare todays date with task dueDate to change color code of task-card
       // if 'today' is 'dueDate', change to yellow warning CSS
       // if 'today' is past 'dueDate', change to red danger CSS 
       const today = dayjs().format('MM/DD/YYYY');
       const dueDate = taskDate.textContent
       
-      if (today === dueDate) {
-        taskCard.className = 'task-card card text-white bg-warning mb-3" style="max-width: 18rem;';
-      } else if (today > dueDate) {
-        taskCard.className = 'task-card card text-white bg-danger mb-3" style="max-width: 18rem;';
+      if (addCard.parentId != 'done-cards') {
+        if (today === dueDate) {
+          taskCard.className = 'task-card card text-white bg-warning mb-3" style="max-width: 18rem;';
+        } else if (today > dueDate) {
+          taskCard.className = 'task-card card text-white bg-danger mb-3" style="max-width: 18rem;';
+        }
       }
     }
   }
@@ -155,10 +159,11 @@ function handleDrop(event, ui) {
   let currentTaskIndex = taskList.findIndex(obj => obj.id == taskId)
   // gets the 'id' from parent
   let currentColumnId = ui.item.parent().attr('id');
-
+  
   // updates the parentId property and stores it in localStorage
   taskList[currentTaskIndex].parentId = currentColumnId
   localStorage.setItem('tasks', JSON.stringify(taskList));
+  location.replace(location.href);
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
